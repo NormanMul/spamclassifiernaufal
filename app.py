@@ -2,19 +2,16 @@ import streamlit as st
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Load the model and TF-IDF vectorizer outside the main function to avoid re-loading on every request
+# Load the model and the fitted TF-IDF vectorizer
 @st.cache_resource
 def load_model():
-    model = joblib.load('model.joblib')
-    return model
+    return joblib.load('model.joblib')
 
 @st.cache_resource
 def load_vectorizer():
-    # Assuming the vectorizer was saved as 'vectorizer.joblib'
-    vectorizer = joblib.load('vectorizer.joblib')  # Load the saved TF-IDF vectorizer
-    return vectorizer
+    return joblib.load('vectorizer.joblib')  # Load the saved, fitted vectorizer
 
-# Load the model and vectorizer only once
+# Load model and vectorizer once
 model = load_model()
 vectorizer = load_vectorizer()
 
@@ -27,7 +24,7 @@ user_input = st.text_area("Enter a message for spam detection:")
 
 # Preprocess input and make a prediction
 if user_input:
-    # Transform the input using the loaded TF-IDF vectorizer
+    # Transform the input using the loaded, fitted TF-IDF vectorizer
     user_input_transformed = vectorizer.transform([user_input])
     
     # Predict with the loaded model
