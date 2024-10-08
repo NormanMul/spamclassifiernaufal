@@ -1,15 +1,14 @@
 import streamlit as st
 import joblib
-from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Load the model and the fitted TF-IDF vectorizer
+# Load the saved model and vectorizer
 @st.cache_resource
 def load_model():
-    return joblib.load('model.joblib')
+    return joblib.load('model.joblib')  # Load the trained model
 
 @st.cache_resource
 def load_vectorizer():
-    return joblib.load('vectorizer.joblib')  # Load the saved, fitted vectorizer
+    return joblib.load('vectorizer.joblib')  # Load the fitted vectorizer
 
 # Load model and vectorizer once
 model = load_model()
