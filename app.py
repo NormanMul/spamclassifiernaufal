@@ -1,6 +1,5 @@
 import streamlit as st
 import joblib
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Load the model and TF-IDF vectorizer outside the main function to avoid re-loading on every request
@@ -11,28 +10,30 @@ def load_model():
 
 @st.cache_resource
 def load_vectorizer():
-    vectorizer = TfidfVectorizer(max_features=1000)  # Adjust to the vectorizer you trained with
+    # Assuming the vectorizer was saved as 'vectorizer.joblib'
+    vectorizer = joblib.load('vectorizer.joblib')  # Load the saved TF-IDF vectorizer
     return vectorizer
 
+# Load the model and vectorizer only once
 model = load_model()
 vectorizer = load_vectorizer()
 
-# Streamlit app
+# Streamlit app UI
 st.title("Spam Detection Classifier")
 st.write("This app classifies whether a text message is spam or not.")
 
-# Text input from the user
+# User input for the text message
 user_input = st.text_area("Enter a message for spam detection:")
 
-# Preprocess input using the cached TF-IDF vectorizer and model
+# Preprocess input and make a prediction
 if user_input:
-    # Transform input text using the TF-IDF vectorizer
+    # Transform the input using the loaded TF-IDF vectorizer
     user_input_transformed = vectorizer.transform([user_input])
     
-    # Predict using the loaded model
+    # Predict with the loaded model
     prediction = model.predict(user_input_transformed)
 
-    # Display the result
+    # Display the prediction result
     if prediction == 1:
         st.write("This message is **SPAM**.")
     else:
